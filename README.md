@@ -1,6 +1,6 @@
 # pp-metadataDropdown-pcf
 
-This is PCF control with dynamic data querying functionality based on Dataverse Web API. It allows creating a custom lookup to render the metadata dropdown such as entities, publishers, and solutions.
+This is `virtual` PCF control with dynamic data querying functionality based on Dataverse Web API. It allows creating a custom lookup to render the metadata dropdown such as entities, publishers, and solutions.
 
 It really helps when you would like to create a custom configuration page.
 
@@ -28,4 +28,5 @@ The output of the control is the record unique identifier, guid.
 ## Implemented
 - Styles of the disabled control
 - Autocomplete
-- Render selected value 
+- Render selected value
+- Empty field placeholder: `---`

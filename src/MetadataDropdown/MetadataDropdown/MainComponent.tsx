@@ -18,8 +18,6 @@ export interface IMainComponentProps {
 
 export const MainComponent: React.FunctionComponent<IMainComponentProps> = (props) => {
   const [options, setOptions] = useState<IComboBoxOption[]>();
-  //const mask = "{{friendlyname}} ( {{customizationprefix}} )";
-  //console.log(Utils.format("---Hello, {{name}} {{surname}}", { name: "Illon", surname: "Musk" }));
 
   function useLoadItems() {
     React.useEffect(() => {
@@ -28,7 +26,6 @@ export const MainComponent: React.FunctionComponent<IMainComponentProps> = (prop
           .then(data => data.entities)
           .then(records => {
             return Promise.resolve(records.map(record => {
-              //console.log("---,{0}", Utils.format(props.mask, record));
               return {
                 key: record[props.keyFieldName],
                 text: !props.mask ? record[props.textFieldName] : Utils.format(props.mask, record)
