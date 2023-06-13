@@ -16,7 +16,7 @@ jobs:
       matrix:
         node-version: [12.x]
     env:
-      projectfile: srcc/package
+      projectfile: src/package
       msbuildtarget: src/package/src
       npm_project_dir: src/MetadataDropdown
 
