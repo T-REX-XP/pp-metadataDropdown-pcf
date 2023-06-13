@@ -45,7 +45,7 @@ jobs:
       - name: Install dependencies
         run: cd ${{ env.npm_project_dir }} && npm install
 
-      - run: npm run build --if-present
+      - run: cd ${{ env.npm_project_dir }} && npm run build --if-present
 
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v1
