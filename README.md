@@ -4,6 +4,7 @@ This is `virtual` PCF control with dynamic data querying functionality based on 
 
 It really helps when you would like to create a custom configuration page.
 
+[![build](https://github.com/T-REX-XP/pp-metadataDropdown-pcf/actions/workflows/build.yml/badge.svg)](https://github.com/T-REX-XP/pp-metadataDropdown-pcf/actions/workflows/build.yml)
 ## Configururation
 
 ### Input config

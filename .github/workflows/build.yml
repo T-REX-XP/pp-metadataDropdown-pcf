@@ -21,10 +21,10 @@ jobs:
       npm_project_dir: src/MetadataDropdown
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -48,27 +48,27 @@ jobs:
       - run: cd ${{ env.npm_project_dir }} && npm run build --if-present
 
       - name: setup-msbuild
-        uses: microsoft/setup-msbuild@v1
+        uses: microsoft/setup-msbuild@v1.3.1
 
       - name: MSBuild
         working-directory: ${{ env.projectfile }}
         run: msbuild /restore /t:rebuild
 
       - name: Managed Solution Artifact ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
           path: ${{ env.projectfile }}/bin/Debug/${{ steps.solution-unique-name.outputs.info }}_managed.zip
 
       - name: Unmanaged Solution Artifact ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_unmanaged.zip
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_unmanaged.zip
           path: ${{ env.projectfile }}/bin/Debug/${{ steps.solution-unique-name.outputs.info }}.zip
 
       - name: Create Release ${{ steps.solution-unique-name.outputs.info }}_v${{ steps.solution-version.outputs.info }}
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@v3
         if: contains(github.ref, 'refs/tags/v')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -80,7 +80,7 @@ jobs:
 
       - name: Upload Release Asset ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip (Managed)
         id: release-managed-solution
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v3
         if: steps.create_release.conclusion == 'success'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -92,7 +92,7 @@ jobs:
 
       - name: Upload Release Asset ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_unmanaged.zip (Unmanaged)
         id: release-unmanaged-solution
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v3
         if: steps.create_release.conclusion == 'success'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
