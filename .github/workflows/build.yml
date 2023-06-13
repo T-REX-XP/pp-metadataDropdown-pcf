@@ -51,20 +51,20 @@ jobs:
         uses: microsoft/setup-msbuild@v1
 
       - name: MSBuild
-        working-directory: ${{ env.msbuildtarget }}
-        run: cd ${{ env.projectfile }} && msbuild /restore /t:rebuild
+        working-directory: ${{ env.projectfile }}
+        run: msbuild /restore /t:rebuild
 
       - name: Managed Solution Artifact ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
-          path: ${{ env.msbuildtarget }}/bin/Debug/${{ steps.solution-unique-name.outputs.info }}_managed.zip
+          path: ${{ env.projectfile }}/bin/Debug/${{ steps.solution-unique-name.outputs.info }}_managed.zip
 
       - name: Unmanaged Solution Artifact ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_unmanaged.zip
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_unmanaged.zip
-          path: ${{ env.msbuildtarget }}/bin/Debug/${{ steps.solution-unique-name.outputs.info }}.zip
+          path: ${{ env.projectfile }}/bin/Debug/${{ steps.solution-unique-name.outputs.info }}.zip
 
       - name: Create Release ${{ steps.solution-unique-name.outputs.info }}_v${{ steps.solution-version.outputs.info }}
         id: create_release
