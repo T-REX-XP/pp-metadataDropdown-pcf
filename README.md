@@ -26,7 +26,7 @@ The output of the control is the record unique identifier, guid.
 ![exapmle config](/img/pcf-settings.png)
 
 ## Implemented
-- Styles of the disabled control
-- Autocomplete
-- Render selected value
-- Empty field placeholder: `---`
+- ✅ Styles of the disabled control
+- ✅  Autocomplete
+- ✅ Render selected value
+- ✅ Empty field placeholder: `---`
