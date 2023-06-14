@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
-          path: ${{ env.projectfile }}/bin/Debug/${{ steps.solution-unique-name.outputs.info }}_managed.zip
+          path: ${{ env.projectfile }}/bin/Debug/${{ steps.solution-unique-name.outputs.info }}.zip
 
       # - name: Unmanaged Solution Artifact ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_unmanaged.zip
       #   uses: actions/upload-artifact@v1
