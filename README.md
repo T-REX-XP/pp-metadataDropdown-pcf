@@ -28,6 +28,7 @@ The output of the control is the record unique identifier, guid.
 
 ## Implemented
 - ✅ Styles of the disabled control
-- ✅  Autocomplete
+- ✅ Autocomplete
 - ✅ Render selected value
 - ✅ Empty field placeholder: `---`
+- ✅ Vitrual component
