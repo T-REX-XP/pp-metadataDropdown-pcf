@@ -3,6 +3,8 @@ name: build
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '**/README.md'
   pull_request:
     branches: [main]
 
@@ -19,7 +21,7 @@ jobs:
       npm_project_dir: src/MetadataDropdown
       #version
       majorVersion: 1
-      minorVersion: 1
+      minorVersion: 0
       buildVersion: ${{ github.run_number }}
       buildType: Release
 

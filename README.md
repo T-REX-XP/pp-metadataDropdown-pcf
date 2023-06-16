@@ -31,4 +31,5 @@ The output of the control is the record unique identifier, guid.
 - ✅ Autocomplete
 - ✅ Render selected value
 - ✅ Empty field placeholder: `---`
-- ✅ Vitrual component
+- ✅ [Vitrual component](https://powerapps.microsoft.com/en-us/blog/virtual-code-components-for-power-apps-using-react-and-fluent-ui-react-platform-libraries/)
+- ✅ Build and release with GitHub Actions
