@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { useState } from 'react';
-import { IComboBoxOption } from '@fluentui/react';
 import { IRepository } from '../Repository/Repository';
 import { CustomDropdown } from './CustomDropdown';
 import IOptionSetValue from '../abstracts/IOptionSetValue';
+import { IThemeProvider } from '../Utils/ThemeProvider';
 
 
 export interface IMainComponentProps {
@@ -12,10 +11,10 @@ export interface IMainComponentProps {
   onChange: (newValue: string | number | undefined) => void;
   isDisabled: boolean;
   selectedKey: number | undefined;
+  themeProvider: IThemeProvider;
 }
 
 export const MainComponent: React.FunctionComponent<IMainComponentProps> = (props) => {
-  const [options, setOptions] = useState<IComboBoxOption[]>();
   const [selectedKey, setSelectedKey] = React.useState<string | number | undefined>();
   return (
     <CustomDropdown
@@ -29,6 +28,7 @@ export const MainComponent: React.FunctionComponent<IMainComponentProps> = (prop
       placeholder='---'
       defaultSelectedKey={props.selectedKey}
       isDisabled={props.isDisabled}
+      themeProvider={props.themeProvider}
     />
   )
 }

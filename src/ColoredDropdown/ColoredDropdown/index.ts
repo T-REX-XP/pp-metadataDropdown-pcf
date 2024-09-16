@@ -4,6 +4,7 @@ import * as React from "react";
 import { IRepository, Repository } from "./Repository/Repository";
 import IContextNew from "./abstracts/IContextNew";
 import IOptionSetValue from "./abstracts/IOptionSetValue";
+import ThemeProvider, { IThemeProvider } from "./Utils/ThemeProvider";
 
 export class ColoredDropdown implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
@@ -14,6 +15,7 @@ export class ColoredDropdown implements ComponentFramework.ReactControl<IInputs,
     private _repository: IRepository;
     private _selectedValue: string | number | undefined;
     private _options: IOptionSetValue[];
+    private _themeProvider: IThemeProvider;
     /**
      * Empty constructor.
      */
@@ -32,6 +34,7 @@ export class ColoredDropdown implements ComponentFramework.ReactControl<IInputs,
         state: ComponentFramework.Dictionary
     ): void {
         this.notifyOutputChanged = notifyOutputChanged;
+        this._themeProvider = new ThemeProvider(context);
         this._context = context as IContextNew;
         this._webApi = this._context.webAPI;
         this._utility = this._context.utils;
@@ -53,6 +56,7 @@ export class ColoredDropdown implements ComponentFramework.ReactControl<IInputs,
             onChange: this.onChange,
             isDisabled: context.mode.isControlDisabled,
             selectedKey: this._selectedValue,
+            themeProvider: this._themeProvider
         };
         return React.createElement(
             MainComponent, props

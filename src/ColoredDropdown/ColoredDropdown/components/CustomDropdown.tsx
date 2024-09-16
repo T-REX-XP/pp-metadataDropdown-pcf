@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Dropdown, IDropdownOption, IDropdownStyles, Icon, mergeStyleSets, mergeStyles } from '@fluentui/react';
 import IOptionSetValue from '../abstracts/IOptionSetValue';
+import { IThemeProvider } from '../Utils/ThemeProvider';
 
 interface CustomDropdownProps {
   options: IOptionSetValue[];
@@ -11,6 +12,7 @@ interface CustomDropdownProps {
   isDisabled?: boolean; // Support for disabling the dropdown
   isReadOnly?: boolean; // Support for read-only mode
   onChange: (event: React.FormEvent<HTMLDivElement>, option?: IDropdownOption) => void;
+  themeProvider: IThemeProvider;
 }
 
 // Styles moved outside as reusable class names using Fluent UI's `mergeStyles`
@@ -43,9 +45,13 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   isDisabled = false,
   isReadOnly = false,
   onChange,
+  themeProvider
 }): React.ReactElement => {
   const [internalSelectedKey, setInternalSelectedKey] = React.useState<string | number | undefined>(defaultSelectedKey);
   const [selectedColor, setSelectedColor] = React.useState<string | undefined>(undefined);
+  const isModernStyles = themeProvider?.isFormModernizationEnabled()
+    && themeProvider?.isUseModernTheme()
+    && themeProvider?.isFluentEnabled();
 
   // Add default placeholder option at the top
   const dropdownOptions: IDropdownOption[] = [
@@ -118,13 +124,13 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
 
   const classNames = mergeStyleSets({
     containerClass: {
-      // "background-color": isModernStyles ? props?.themeProvider?.getTokens()?.colorNeutralBackground3 : "#fff",
+      "background-color": isModernStyles ? themeProvider?.getTokens()?.colorNeutralBackground3 : "#fff",
       padding: "10px 5px 10px 10px",
       "margin-right": "3px",
       "max-height": "400px",
       overflow: "scroll",
       width: "100%",
-      // "box-shadow": isModernStyles ? "none" : "0 0 2px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.14)"
+      "box-shadow": isModernStyles ? "none" : "0 0 2px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.14)"
     }
   });
   // Apply styles to the dropdown, removing borders and adding bottom border on focus
