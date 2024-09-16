@@ -1,63 +1,34 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { IComboBoxOption, IDropdownOption } from '@fluentui/react';
+import { IComboBoxOption } from '@fluentui/react';
 import { IRepository } from '../Repository/Repository';
-import { Utils } from '../Utils/Utils';
-import { CustomDropdown, CustomDropdownOption } from './CustomDropdown';
+import { CustomDropdown } from './CustomDropdown';
+import IOptionSetValue from '../abstracts/IOptionSetValue';
+
 
 export interface IMainComponentProps {
   repository: IRepository;
-  endpoint: string;
-  options: string;
-  keyFieldName: string;
-  textFieldName: string;
-  onChange: (newValue: string | undefined) => void;
+  options: IOptionSetValue[];
+  onChange: (newValue: string | number | undefined) => void;
   isDisabled: boolean;
-  selectedKey: string | undefined;
-  mask: string | undefined;
+  selectedKey: number | undefined;
 }
 
 export const MainComponent: React.FunctionComponent<IMainComponentProps> = (props) => {
   const [options, setOptions] = useState<IComboBoxOption[]>();
-  const [selectedKey, setSelectedKey] = React.useState<string | undefined>();
-  const sampleOptions: CustomDropdownOption[] = [
-    { key: '1', text: 'Option 1', color: '#ffcccc' },
-    { key: '2', text: 'Option 2', color: '#ccffcc' },
-    { key: '3', text: 'Option 3', color: '#ccccff' },
-  ];
-
-
-  function useLoadItems() {
-    React.useEffect(() => {
-      (async () => {
-        const items = await props.repository?.retrieveMultipleRecords(props.endpoint, props.options, 5000)
-          .then(data => data.entities)
-          .then(records => {
-            return Promise.resolve(records.map(record => {
-              return {
-                key: record[props.keyFieldName],
-                text: !props.mask ? record[props.textFieldName] : Utils.format(props.mask, record)
-              };
-            }));
-          });
-
-        setOptions(items);
-      })();
-    }, []);
-  }
-  useLoadItems();
-
+  const [selectedKey, setSelectedKey] = React.useState<string | number | undefined>();
   return (
     <CustomDropdown
-      options={sampleOptions || []}
+      options={props.options || []}
       defaultOptionText="--Select--" // Default option text (acts like a placeholder)
       onChange={(e, option) => {
-        const newValue = option?.key as string;
+        const newValue = option?.key;
         setSelectedKey(newValue);
         props.onChange(newValue)
       }}
       placeholder='---'
       defaultSelectedKey={props.selectedKey}
+      isDisabled={props.isDisabled}
     />
   )
 }

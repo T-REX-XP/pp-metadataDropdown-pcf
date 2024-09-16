@@ -3,6 +3,7 @@ import { MainComponent, IMainComponentProps } from "./components/MainComponent";
 import * as React from "react";
 import { IRepository, Repository } from "./Repository/Repository";
 import IContextNew from "./abstracts/IContextNew";
+import IOptionSetValue from "./abstracts/IOptionSetValue";
 
 export class ColoredDropdown implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
@@ -11,7 +12,8 @@ export class ColoredDropdown implements ComponentFramework.ReactControl<IInputs,
     private _utility: ComponentFramework.Utility;
     private _context: IContextNew;
     private _repository: IRepository;
-    private _selectedValue: string | undefined;
+    private _selectedValue: string | number | undefined;
+    private _options: IOptionSetValue[];
     /**
      * Empty constructor.
      */
@@ -34,6 +36,7 @@ export class ColoredDropdown implements ComponentFramework.ReactControl<IInputs,
         this._webApi = this._context.webAPI;
         this._utility = this._context.utils;
         this._repository = new Repository(this._webApi, this._utility);
+        this._options = this._context.parameters.value?.attributes?.Options as IOptionSetValue[];
     }
 
     /**
@@ -42,25 +45,21 @@ export class ColoredDropdown implements ComponentFramework.ReactControl<IInputs,
      * @returns ReactElement root react element for the control
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
-        this._selectedValue = context.parameters.value.raw?.toString();
+        this._selectedValue = context.parameters.value.raw ?? undefined;
 
         const props: IMainComponentProps = {
+            options: this._options,
             repository: this._repository,
-            endpoint: context.parameters.endpoint.raw as string,
-            options: context.parameters.options.raw as string,
-            keyFieldName: context.parameters.key.raw as string,
-            textFieldName: context.parameters.text.raw as string,
             onChange: this.onChange,
             isDisabled: context.mode.isControlDisabled,
             selectedKey: this._selectedValue,
-            mask: context.parameters.mask.raw as string || undefined
         };
         return React.createElement(
             MainComponent, props
         );
     }
-    onChange = (newValue: string | undefined): void => {
-        this._selectedValue = newValue?.toString();
+    onChange = (newValue: string | number | undefined): void => {
+        this._selectedValue = newValue;
         this.notifyOutputChanged();
     };
 
@@ -71,7 +70,7 @@ export class ColoredDropdown implements ComponentFramework.ReactControl<IInputs,
     public getOutputs(): IOutputs {
         // custom code goes here - remove the line below and return the correct output
         const result: IOutputs = {
-            value: this._selectedValue?.toString()
+            value: this._selectedValue as number
         };
         return result;
     }
