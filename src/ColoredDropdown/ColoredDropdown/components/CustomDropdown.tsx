@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Dropdown, IDropdownOption, IDropdownStyles, Icon, mergeStyleSets, mergeStyles } from '@fluentui/react';
+import { Dropdown, IDropdownOption, Icon, mergeStyles } from '@fluentui/react';
 import IOptionSetValue from '../abstracts/IOptionSetValue';
 import { IThemeProvider } from '../Utils/ThemeProvider';
+import { getClassNames, getDropdownStyles } from './CustomDropdown.Styles';
 
 interface CustomDropdownProps {
   options: IOptionSetValue[];
@@ -15,26 +16,6 @@ interface CustomDropdownProps {
   themeProvider: IThemeProvider;
 }
 
-// Styles moved outside as reusable class names using Fluent UI's `mergeStyles`
-const dropdownOptionClass = mergeStyles({
-  padding: '8px',
-  marginBottom: '4px',
-  display: 'flex',
-  alignItems: 'center',
-  width: '100%', // Ensure the background color applies to the full width of the item
-});
-
-const selectedOptionClass = mergeStyles({
-  color: '#fff', // Text color for selected item
-});
-
-const unselectedOptionClass = mergeStyles({
-  color: '#000', // Text color for unselected item
-});
-
-const iconClass = mergeStyles({
-  marginRight: '8px',
-});
 
 export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   options,
@@ -53,6 +34,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
     && themeProvider?.isUseModernTheme()
     && themeProvider?.isFluentEnabled();
 
+  const classNames = getClassNames(isModernStyles, themeProvider);
   // Add default placeholder option at the top
   const dropdownOptions: IDropdownOption[] = [
     { key: 'default', text: defaultOptionText, data: { color: 'transparent' } }, // Default option at the top
@@ -98,12 +80,12 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
 
     return (
       <div
-        className={mergeStyles(dropdownOptionClass, {
+        className={mergeStyles(classNames.dropdownOption, {
           backgroundColor,
-        }, isSelected ? selectedOptionClass : unselectedOptionClass)}
+        }, isSelected ? classNames.selectedOption : classNames.unselectedOption)}
       >
         {isSelected && option.key !== 'default' && (
-          <Icon iconName="CheckMark" className={iconClass} /> // Render checkmark if selected
+          <Icon iconName="CheckMark" className={classNames.iconClass} /> // Render checkmark if selected
         )}
         {option.text}
       </div>
@@ -116,61 +98,13 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
 
     const backgroundColor = option.data?.color || 'transparent'; // Fallback to transparent if no color
     return (
-      <div className={mergeStyles({ backgroundColor, padding: '4px 8px', borderRadius: '4px' })}>
+      <div className={mergeStyles({ backgroundColor, borderRadius: '4px' })}>
         {option.text}
       </div>
     );
   };
 
-  const classNames = mergeStyleSets({
-    containerClass: {
-      "background-color": isModernStyles ? themeProvider?.getTokens()?.colorNeutralBackground3 : "#fff",
-      padding: "10px 5px 10px 10px",
-      "margin-right": "3px",
-      "max-height": "400px",
-      overflow: "scroll",
-      width: "100%",
-      "box-shadow": isModernStyles ? "none" : "0 0 2px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.14)"
-    }
-  });
-  // Apply styles to the dropdown, removing borders and adding bottom border on focus
-  const dropdownStyles: Partial<IDropdownStyles> = {
-    root: {
-      width: '100%'
-    },
-    title: {
-      backgroundColor: selectedColor, // Apply selected color to dropdown title background
-      border: 'none', // Remove all borders
-      borderBottom: '2px solid transparent', // Default transparent bottom border
-      borderRadius: '0px', // No border radius
-      boxShadow: 'none', // No shadow
-    },
-    dropdownItem: {
-      borderRadius: '4px',
-    },
-    dropdownItemSelected: {
-      borderRadius: '4px',
-    },
-    caretDownWrapper: {
-      color: selectedColor, // Apply selected color to the dropdown icon
-    },
-    callout: {
-      border: 'none', // Remove callout border
-    },
-    dropdown: {
-      selectors: {
-        '&:focus-within .ms-Dropdown-title': {
-          borderBottom: '2px solid #0078D4', // Show bottom border when focused or selected
-        },
-        '&:hover .ms-Dropdown-title': {
-          borderBottom: '2px solid #0078D4', // Show bottom border on hover
-        },
-      },
-    },
-  };
-
   return (
-    <div className={classNames.containerClass}>
       <Dropdown
         placeholder={placeholder}
         options={dropdownOptions}
@@ -179,10 +113,9 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         onChange={handleChange}
         onRenderOption={onRenderOption} // Use custom render function for options with checkmark
         onRenderTitle={onRenderTitle} // Use custom render function for the selected item
-        styles={dropdownStyles} // Apply custom styles with no borders, only bottom line
+        styles={getDropdownStyles(selectedColor)} // Apply custom styles with no borders, only bottom line
         disabled={isDisabled} // Disable the dropdown when isDisabled is true
       />
-    </div>
   );
 };
 
