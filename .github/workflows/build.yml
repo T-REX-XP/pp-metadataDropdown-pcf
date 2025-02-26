@@ -33,57 +33,65 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Get Solution Unique Name
-        id: solution-unique-name
-        uses: mavrosxristoforos/get-xml-info@1.0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
         with:
-          xml-file: ${{ env.msbuildtarget }}/Other/Solution.xml
-          xpath: "//ImportExportXml/SolutionManifest/UniqueName"
+          dotnet-version: '8.0.x' # Specify the version you need
+          
+      - name: Build solution with dotnet
+        run: cd ${{ env.projectfile }} && dotnet build --configuration Release      
 
-      - name: Get Solution Version
-        id: solution-version
-        uses: mavrosxristoforos/get-xml-info@1.0
-        with:
-          xml-file: ${{ env.msbuildtarget }}/Other/Solution.xml
-          xpath: "//ImportExportXml/SolutionManifest/Version"
+      # - name: Get Solution Unique Name
+      #   id: solution-unique-name
+      #   uses: mavrosxristoforos/get-xml-info@1.0
+      #   with:
+      #     xml-file: ${{ env.msbuildtarget }}/Other/Solution.xml
+      #     xpath: "//ImportExportXml/SolutionManifest/UniqueName"
 
-      - name: Install dependencies
-        run: cd ${{ env.npm_project_dir }} && npm install
+      # - name: Get Solution Version
+      #   id: solution-version
+      #   uses: mavrosxristoforos/get-xml-info@1.0
+      #   with:
+      #     xml-file: ${{ env.msbuildtarget }}/Other/Solution.xml
+      #     xpath: "//ImportExportXml/SolutionManifest/Version"
 
-      - run: cd ${{ env.npm_project_dir }} && npm run build --if-present
+      # - name: Install dependencies
+      #   run: cd ${{ env.npm_project_dir }} && npm install
 
-      - name: Use setup-msbuild
-        uses: microsoft/setup-msbuild@v1.3.1
+      # - run: cd ${{ env.npm_project_dir }} && npm run build --if-present
 
-      - name: MSBuild
-        working-directory: ${{ env.projectfile }}
-        run: msbuild /restore /t:rebuild /p:configuration=${{ env.buildType }}
+      # - name: Use setup-msbuild
+      #   uses: microsoft/setup-msbuild@v1.3.1
 
-      - name: Managed Solution Artifact ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
-        uses: actions/upload-artifact@v1
-        with:
-          name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
-          path: ${{ env.projectfile }}/bin/${{ env.buildType }}/${{ steps.solution-unique-name.outputs.info }}.zip
+      # - name: MSBuild
+      #   working-directory: ${{ env.projectfile }}
+      #   run: msbuild /restore /t:rebuild /p:configuration=${{ env.buildType }}
 
-      - name: Create Release ${{ steps.solution-unique-name.outputs.info }}_v${{ steps.solution-version.outputs.info }}
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ env.majorVersion }}.${{ env.minorVersion }}.${{ env.buildVersion }} #v.${{ steps.solution-version.outputs.info }} #${{ github.ref }}
-          release_name: ${{ steps.solution-unique-name.outputs.info }}_v${{ steps.solution-version.outputs.info }}
-          draft: false
-          prerelease: false
+      # - name: Managed Solution Artifact ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
+      #     path: ${{ env.projectfile }}/bin/${{ env.buildType }}/${{ steps.solution-unique-name.outputs.info }}.zip
 
-      - name: Upload Release Asset ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip (Managed)
-        id: release-managed-solution
-        uses: actions/upload-release-asset@v1
-        if: steps.create_release.conclusion == 'success'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.projectfile }}/bin/${{ env.buildType }}/${{ steps.solution-unique-name.outputs.info }}.zip
-          asset_name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
-          asset_content_type: application/zip
+      # - name: Create Release ${{ steps.solution-unique-name.outputs.info }}_v${{ steps.solution-version.outputs.info }}
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: v${{ env.majorVersion }}.${{ env.minorVersion }}.${{ env.buildVersion }} #v.${{ steps.solution-version.outputs.info }} #${{ github.ref }}
+      #     release_name: ${{ steps.solution-unique-name.outputs.info }}_v${{ steps.solution-version.outputs.info }}
+      #     draft: false
+      #     prerelease: false
+
+      # - name: Upload Release Asset ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip (Managed)
+      #   id: release-managed-solution
+      #   uses: actions/upload-release-asset@v1
+      #   if: steps.create_release.conclusion == 'success'
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ${{ env.projectfile }}/bin/${{ env.buildType }}/${{ steps.solution-unique-name.outputs.info }}.zip
+      #     asset_name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
+      #     asset_content_type: application/zip
