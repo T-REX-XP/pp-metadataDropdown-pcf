@@ -56,7 +56,7 @@ jobs:
         run: cd ${{ env.projectfile }} && dotnet build --configuration ${{ env.buildType }}
 
       - name: Managed Solution Artifact ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
           path: ${{ env.projectfile }}/bin/${{ env.buildType }}/${{ steps.solution-unique-name.outputs.info }}.zip
