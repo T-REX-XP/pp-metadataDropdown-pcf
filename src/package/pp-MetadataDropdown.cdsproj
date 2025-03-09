@@ -46,6 +46,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\MetadataDropdown\MetadataDropdown.pcfproj" />
+    <ProjectReference Include="..\ColoredDropdown\ColoredDropdown.pcfproj" />
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
